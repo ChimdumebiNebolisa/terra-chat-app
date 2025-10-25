@@ -21,6 +21,7 @@ export default function ChatBubble({ message, isUser, timestamp }: ChatBubblePro
       console.error('Failed to copy text: ', err);
     }
   };
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -33,8 +34,13 @@ export default function ChatBubble({ message, isUser, timestamp }: ChatBubblePro
         className={`max-w-xs lg:max-w-lg px-6 py-4 rounded-2xl shadow-lg group relative ${
           isUser
             ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-br-md"
-            : "bg-white/95 dark:bg-gray-800/95 text-slate-900 dark:text-slate-100 rounded-bl-md backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
+            : "bg-gray-800/95 text-slate-100 rounded-bl-md backdrop-blur-sm border border-gray-700/50"
         }`}
+        style={{
+          boxShadow: isUser 
+            ? '0 8px 32px rgba(37, 99, 235, 0.3), 0 0 0 1px rgba(59, 130, 246, 0.2) inset'
+            : '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(148, 163, 184, 0.1) inset'
+        }}
       >
         <p className="text-sm leading-relaxed whitespace-pre-wrap pr-8">{message}</p>
         
@@ -44,7 +50,7 @@ export default function ChatBubble({ message, isUser, timestamp }: ChatBubblePro
           className={`absolute top-2 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity ${
             isUser 
               ? "text-white hover:text-blue-50 hover:bg-blue-800/50" 
-              : "text-slate-700 dark:text-slate-100 hover:text-slate-800 dark:hover:text-slate-50 hover:bg-gray-100 dark:hover:bg-gray-700"
+              : "text-slate-200 hover:text-slate-50 hover:bg-gray-700"
           }`}
           aria-label={copied ? "Copied!" : "Copy message"}
           title={copied ? "Copied!" : "Copy message"}
@@ -62,7 +68,7 @@ export default function ChatBubble({ message, isUser, timestamp }: ChatBubblePro
         
         {/* Message timestamp */}
         <div className={`text-xs mt-2 opacity-70 ${
-          isUser ? "text-blue-50" : "text-slate-700 dark:text-slate-200"
+          isUser ? "text-blue-50" : "text-slate-200"
         }`}>
           {new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>

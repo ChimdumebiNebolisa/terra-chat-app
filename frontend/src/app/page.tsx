@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import ChatBubble from "@/components/ChatBubble";
 import EventCard from "@/components/EventCard";
 import TypingIndicator from "@/components/TypingIndicator";
-import ThemeToggle from "@/components/ThemeToggle";
 import BackgroundAnimation from "@/components/BackgroundAnimation";
 import { useChat } from "@/hooks/useChat";
 import { Event } from "@/types/event";
@@ -60,8 +59,8 @@ export default function Home() {
         <BackgroundAnimation />
         <div className="relative z-10 text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">TerraChat</h2>
-          <p className="text-slate-800 dark:text-slate-100">Loading natural event data...</p>
+          <h2 className="text-2xl font-bold text-slate-100 mb-2">TerraChat</h2>
+          <p className="text-slate-100">Loading natural event data...</p>
         </div>
       </div>
     );
@@ -83,7 +82,6 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
             <div className="flex-1"></div>
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <ThemeToggle />
               <button
                 onClick={handleClearChat}
                 aria-label="Start a new conversation"
@@ -98,7 +96,7 @@ export default function Home() {
             TerraChat
           </h1>
           
-          <p className="text-lg sm:text-xl md:text-2xl text-slate-800 dark:text-slate-100 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed font-medium px-4">
+          <p className="text-lg sm:text-xl md:text-2xl text-slate-100 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed font-medium px-4">
             Hi! How can I help you explore natural events around the world?
           </p>
         </motion.div>
@@ -114,37 +112,37 @@ export default function Home() {
             {messages.length === 0 ? (
               <div className="text-center py-8">
                 <div className="mb-6">
-                  <svg className="w-16 h-16 mx-auto text-blue-400 dark:text-blue-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 mx-auto text-blue-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">Welcome to TerraChat!</h3>
-                  <p className="text-slate-800 dark:text-slate-100 mb-6">Ask me about natural events happening around the world.</p>
+                  <h3 className="text-lg font-semibold text-slate-100 mb-2">Welcome to TerraChat!</h3>
+                  <p className="text-slate-100 mb-6">Ask me about natural events happening around the world.</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md mx-auto">
                   <button
                     onClick={() => setInput("What wildfires are currently active?")}
-                    className="p-4 text-sm bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors min-h-[44px] flex items-center justify-center"
+                    className="p-4 text-sm bg-blue-900/20 text-blue-300 rounded-lg hover:bg-blue-900/30 transition-colors min-h-[44px] flex items-center justify-center"
                     aria-label="Ask about active wildfires"
                   >
                     🔥 Active wildfires
                   </button>
                   <button
                     onClick={() => setInput("Show me recent earthquakes")}
-                    className="p-4 text-sm bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors min-h-[44px] flex items-center justify-center"
+                    className="p-4 text-sm bg-green-900/20 text-green-300 rounded-lg hover:bg-green-900/30 transition-colors min-h-[44px] flex items-center justify-center"
                     aria-label="Ask about recent earthquakes"
                   >
                     🌍 Recent earthquakes
                   </button>
                   <button
                     onClick={() => setInput("What storms are happening?")}
-                    className="p-4 text-sm bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors min-h-[44px] flex items-center justify-center"
+                    className="p-4 text-sm bg-purple-900/20 text-purple-300 rounded-lg hover:bg-purple-900/30 transition-colors min-h-[44px] flex items-center justify-center"
                     aria-label="Ask about current storms"
                   >
                     ⛈️ Current storms
                   </button>
                   <button
                     onClick={() => setInput("Tell me about recent floods")}
-                    className="p-4 text-sm bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors min-h-[44px] flex items-center justify-center"
+                    className="p-4 text-sm bg-cyan-900/20 text-cyan-300 rounded-lg hover:bg-cyan-900/30 transition-colors min-h-[44px] flex items-center justify-center"
                     aria-label="Ask about recent floods"
                   >
                     🌊 Recent floods
@@ -199,7 +197,7 @@ export default function Home() {
               aria-label="Message input"
               aria-describedby="input-help character-count"
               maxLength={500}
-              className="w-full px-4 sm:px-6 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-slate-900 dark:text-slate-100 transition-all duration-300 text-base sm:text-lg placeholder-slate-700 dark:placeholder-slate-300"
+              className="w-full px-4 sm:px-6 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-gray-600 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 bg-gray-800/90 backdrop-blur-sm text-slate-100 transition-all duration-300 text-base sm:text-lg placeholder-slate-300"
               disabled={isLoading}
             />
             <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -208,7 +206,7 @@ export default function Home() {
               </svg>
             </div>
             {input.length > 400 && (
-              <div className="absolute bottom-1 right-3 text-xs text-slate-700 dark:text-slate-300" id="character-count">
+              <div className="absolute bottom-1 right-3 text-xs text-slate-300" id="character-count">
                 {input.length}/500
               </div>
             )}
@@ -238,18 +236,18 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+            className="bg-gray-800 rounded-2xl p-6 max-w-md w-full shadow-2xl"
           >
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+            <h3 className="text-lg font-semibold text-slate-100 mb-4">
               Clear Chat History?
             </h3>
-          <p className="text-slate-800 dark:text-slate-100 mb-6">
+          <p className="text-slate-100 mb-6">
             This will permanently delete all your messages. This action cannot be undone.
           </p>
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowClearConfirm(false)}
-                className="flex-1 px-4 py-2 text-slate-700 dark:text-slate-200 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className="flex-1 px-4 py-2 text-slate-200 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
               >
                 Cancel
               </button>
