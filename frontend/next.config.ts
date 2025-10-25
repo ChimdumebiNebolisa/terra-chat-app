@@ -14,11 +14,42 @@ const nextConfig: NextConfig = {
         fs: false,
         path: false,
         os: false,
+        stream: false,
+        buffer: false,
+        crypto: false,
+        module: false,
+        net: false,
+        tls: false,
+        child_process: false,
+        util: false,
+        url: false,
+        http: false,
+        https: false,
+        zlib: false,
+        events: false,
+        assert: false,
+        constants: false,
+        dns: false,
+        dgram: false,
+        readline: false,
+        punycode: false,
+        querystring: false,
+        string_decoder: false,
+        sys: false,
+        vm: false,
+        cluster: false,
+        perf_hooks: false,
+        async_hooks: false,
+        inspector: false,
+        'fs/promises': false,
       };
     }
     return config;
   },
-  turbopack: {},
+  // Disable Turbopack for now as it doesn't support the same fallback configuration
+  experimental: {
+    turbo: false,
+  },
 };
 
 export default nextConfig;
