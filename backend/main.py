@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -7,6 +9,7 @@ from routes import chat, health
 import os
 import logging
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 # Determine log level based on environment
 log_level = logging.DEBUG if os.getenv("ENVIRONMENT", "development").lower() == "development" else logging.INFO
@@ -33,36 +36,43 @@ app = FastAPI(title="TerraChat API", version="1.0.0")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS middleware - configure based on environment
-allowed_origins = [
-    "http://localhost:3000",  # Next.js dev server
-    "http://127.0.0.1:3000",  # Alternative localhost
-]
-
-# Add production origins if specified
-if os.getenv("FRONTEND_URL"):
-    allowed_origins.append(os.getenv("FRONTEND_URL"))
-
-# Add staging origins if specified
-if os.getenv("FRONTEND_STAGING_URL"):
-    allowed_origins.append(os.getenv("FRONTEND_STAGING_URL"))
-
-# Determine if we're in production
-is_production = os.getenv("ENVIRONMENT", "development").lower() == "production"
-
+# CORS middleware - allow all origins for single deployment
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=["*"],
     allow_credentials=True,
-    # Restrict methods in production, allow all in development
-    allow_methods=["GET", "POST"] if is_production else ["*"],
-    # Restrict headers in production to only what's needed
-    allow_headers=["Content-Type", "Authorization"] if is_production else ["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers
 app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
+
+# Serve frontend static files
+frontend_path = Path(__file__).parent.parent / "frontend" / ".next"
+if frontend_path.exists():
+    app.mount("/_next", StaticFiles(directory=str(frontend_path / "static")), name="static")
+    
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        """Serve frontend files, defaulting to index.html for non-API routes"""
+        if full_path.startswith("api"):
+            return {"detail": "Not Found"}
+        
+        if not full_path or full_path == "/":
+            full_path = "index.html"
+        
+        file_path = frontend_path / full_path
+        if file_path.exists() and file_path.is_file():
+            return FileResponse(str(file_path))
+        
+        # Fallback to index.html for SPA routing
+        index_path = frontend_path / "index.html"
+        if index_path.exists():
+            return FileResponse(str(index_path))
+        
+        return {"detail": "Not Found"}
 
 if __name__ == "__main__":
     import uvicorn
