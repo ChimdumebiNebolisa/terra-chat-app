@@ -5,8 +5,10 @@ set -o errexit
 # Build frontend first
 echo "Building frontend..."
 cd ../frontend
-npm install
+npm install --legacy-peer-deps
 npm run build
+echo "Frontend build complete in: $(pwd)"
+ls -la
 cd ../backend
 
 # Install Python dependencies

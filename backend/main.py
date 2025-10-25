@@ -50,9 +50,38 @@ app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
 
 # Serve frontend static files
-frontend_path = Path(__file__).parent.parent / "frontend" / ".next"
-if frontend_path.exists():
-    app.mount("/_next", StaticFiles(directory=str(frontend_path / "static")), name="static")
+frontend_path = Path(__file__).parent.parent / "frontend" / "out"
+logger = logging.getLogger(__name__)
+
+# Try multiple possible frontend locations
+possible_paths = [
+    Path(__file__).parent.parent / "frontend" / "out",
+    Path(__file__).parent.parent / "frontend" / ".next",
+    Path(__file__).parent.parent / "frontend",
+]
+
+frontend_found = False
+for path in possible_paths:
+    if path.exists():
+        logger.info(f"Found frontend at: {path}")
+        frontend_path = path
+        frontend_found = True
+        break
+
+if frontend_found:
+    # Mount static assets
+    static_path = frontend_path / "_next" / "static"
+    if static_path.exists():
+        app.mount("/_next/static", StaticFiles(directory=str(static_path)), name="static")
+    
+    # Serve main pages
+    @app.get("/")
+    async def serve_root():
+        """Serve the root index.html"""
+        index_path = frontend_path / "index.html"
+        if index_path.exists():
+            return FileResponse(str(index_path))
+        return {"detail": "Frontend not found", "path": str(frontend_path)}
     
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
@@ -60,8 +89,8 @@ if frontend_path.exists():
         if full_path.startswith("api"):
             return {"detail": "Not Found"}
         
-        if not full_path or full_path == "/":
-            full_path = "index.html"
+        if full_path.startswith("_next"):
+            return {"detail": "Static file not found"}
         
         file_path = frontend_path / full_path
         if file_path.exists() and file_path.is_file():
@@ -72,7 +101,9 @@ if frontend_path.exists():
         if index_path.exists():
             return FileResponse(str(index_path))
         
-        return {"detail": "Not Found"}
+        return {"detail": "Not Found", "requested": full_path, "frontend_path": str(frontend_path)}
+else:
+    logger.warning("Frontend build not found! Make sure frontend is built.")
 
 if __name__ == "__main__":
     import uvicorn
