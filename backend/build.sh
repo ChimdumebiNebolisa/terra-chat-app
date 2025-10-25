@@ -3,4 +3,5 @@
 set -o errexit
 
 pip install --upgrade pip
-pip install --no-cache-dir -r requirements.txt
+pip install wheel
+pip install --only-binary :all: -r requirements.txt || pip install -r requirements.txt
